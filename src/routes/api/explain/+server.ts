@@ -8,6 +8,11 @@ export const config: Config = {
 	runtime: 'edge'
 }
 
+
+
+
+
+
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		if (!OPENAI_KEY) {
@@ -28,7 +33,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const prompt = stripIndent`
         ${oneLine`
-        You are an enthusastic kindergarden teacher who loves explaining things to students. Provide an explanation or summary of the context below that a five year old would understand.
+		You love to help me write emails. Based on my writing style, tone and the information I provide, you will craft an email for me. Cut out any pre-text and just give me the email. 
         `}
 
         Context:"""${context.trim()}"""
@@ -39,8 +44,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		const completionOpts: CreateCompletionRequest = {
 			model: 'text-davinci-003',
 			prompt,
-			max_tokens: 256,
-			temperature: 0.9,
+			max_tokens: 1024,
+			temperature: 0.7,
 			stream: true
 		}
 
