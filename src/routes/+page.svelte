@@ -82,7 +82,7 @@
 	}
 </script>
 
-<a href="/about">About Page</a>
+
 
 <div style="display: flex; flex-direction: row; align-items: center;">
 	<button on:click={() => handleButtonClick('Shakespeare')} style="margin-right: 20px;">Shakespeare's Style</button>
