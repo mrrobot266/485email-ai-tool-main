@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CreateCompletionResponse } from 'openai'
 	import { SSE } from 'sse.js'
-	import { Link } from 'svelte-navigator';
+	
 
 	let context = ''
 	let recipientName = ''
