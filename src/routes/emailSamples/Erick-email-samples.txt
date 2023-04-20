@@ -1,0 +1,36 @@
+Hello Professor,
+
+There are 3 questions on the Discrete Random Variable Quiz which I was hoping you could regrade as I believe I deserved full points. On question 3 it marked me incorrect for typing out "two" instead of "2" which is the same thing and I believe unfair. Also on question 6 and question 7, it marked it incorrect for being off by .0001. There is technically a rounding error made by me but on the Wiley homework, it allows us to make a small rounding error like this when dealing with 4 decimal places and gives us full points which misguided me. I feel that since the margin of error is so small you could regrade this?  I attached the images to the questions below. 
+
+Thank you very much for reading Professor and I hope you can reconsider my grades on these questions. 
+
+Hello my name is Erick, I see you are looking for group members for the project. I have experience in Java and c++ and I am committed to contributing to this project. If you want to allow me into your group please email me back. Thanks!
+
+Hello, my CSE 310 class and recitation class got removed from my schedule randomly. The class is now full and I cannot re-enroll. Can you help me find out why this happened? Is it possible that I did not meet the prerequisites? I am transferring from CGCC where I completed 67 credits but apparently, the max credits you can transfer is 64, so could this be a problem?
+Thank you for your time!
+
+Hello I am trying to apply to ASU for spring 2022. I signed up for the mapp with CGCC. I am trying to start my application but it tells me to login through My ASU account. How do I apply or check if I am admitted already?
+Thank you for your time!
+
+Hello Professor, 
+I talked to you before about rounding errors in quizzes. On question 3 of Continuous Random Variables and Probability Distributions Quiz it marked it as wrong for being off by .01. This is also the case for question 1 of Descriptive Statistics, Methods of Point Estimation, and Sampling Distributions Quiz. Is it possible that I could get credit for these questions? I attached photos below.
+Thank you for your consideration!
+
+Hello, this is Erick Soto in Group 15, I am wondering why I got a 0 for project 3. In the github, I committed code for the Walking the page table function and counting the rss and swap count. I don't see why this is not sufficient. Please get back to me as soon as possible. 
+Thank You.
+
+Dear David,  
+
+
+I hope this email finds you well. This is Erick Soto from the ASU Capstone Project Marketing Tool Team. I would like to request a meeting with you this Friday or Saturday (12 PM MT) at the same time as last week to discuss the set of user stories and backlog items.  
+
+
+It would be great if you could let me know which day and time work best for you.
+
+
+Thank you for your time and I look forward to speaking with you soon.  
+
+
+Best regards,  
+
+Erick Soto
