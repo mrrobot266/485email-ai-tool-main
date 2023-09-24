@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CreateCompletionResponse } from 'openai'
 	import { SSE } from 'sse.js'
-	
+	//import { Link } from 'svelte-navigator';
 
 	let context = ''
 	let recipientName = ''
@@ -82,7 +82,12 @@
 	}
 </script>
 
-
+<div class="fullpage">
+    <a href="/home" class="tablink">Home Page</a>
+    <a href="/" class="tablinkcurrent">Email Writing Tool</a>
+    <a href="/saveVoice" class="tablink">Save Voice Style</a>
+    <a href="/about" class="tablink">About Page</a>
+</div>
 
 <div style="display: flex; flex-direction: row; align-items: center;">
 	<button on:click={() => handleButtonClick('Shakespeare')} style="margin-right: 20px;">Shakespeare's Style</button>
@@ -101,38 +106,8 @@
 		<textarea name="recipientName" rows="1" style="flex: 1;" bind:value={recipientName}></textarea>
 	</div>
 
-	<!-- <div style="display: flex; align-items: center; margin-bottom: 20px;">
-		<label for="yourName" style="margin-right: 10px;">Your Name</label>
-		<textarea name="yourName" rows="1" style="flex: 1;" bind:value={yourName}></textarea>
-	</div> -->
-	  
 	<label for="emailContext" style="margin-right: 10px;">What is the email about?</label>
 	<textarea name="emailContext" rows="2" style="flex: 1;" bind:value={emailContext}></textarea>
-	
-	<!-- <label for="writingExample" style="margin-right: 10px;">Provide sample emails below so your writing style and tone can be replicated.</label>
-	
-	<div style="display: flex; flex-direction: row; align-items: center;">
-		-->
-		<!-- <textarea id="email-textarea" name="writingExample" rows="5" bind:value={writingExample} style="width: 100%;"></textarea> --> 
-		<!--
-		<button id="load-button" type="button" style="font-size: 16px; padding: 1px 1px;">Erick's Style</button>
-	</div>
-
-	<script>
-		const button2 = document.getElementById('load-button');
-		const textarea = document.getElementById('email-textarea');
-  
-		button2.addEventListener('click', async () => {
-		  try {
-			const response = await fetch('Erick-email-samples.txt');
-			const text = await response.text();
-			textarea.value = text;
-		  } catch (error) {
-			console.error(error);
-		  }
-		});
-	</script>
--->
 
 	<button>Write Email</button>
 	<div class="pt-4">
