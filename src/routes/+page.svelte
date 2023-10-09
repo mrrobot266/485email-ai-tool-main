@@ -2,6 +2,44 @@
 	import type { CreateCompletionResponse } from 'openai'
 	import { SSE } from 'sse.js'
 	//import { Link } from 'svelte-navigator';
+    import { initializeApp } from 'firebase/app';
+    import { getFirestore, setDoc, getDocs, collection, Firestore } from 'firebase/firestore';
+    import { docStore } from "sveltefire";
+    import { getAnalytics } from "firebase/analytics";
+    import { onMount } from 'svelte';
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
+  authDomain: "touchpoint-capstone-database.firebaseapp.com",
+  projectId: "touchpoint-capstone-database",
+  storageBucket: "touchpoint-capstone-database.appspot.com",
+  messagingSenderId: "1032080279652",
+  appId: "1:1032080279652:web:9a53f2acb5069e91513771",
+  measurementId: "G-HH2QG68FLN"
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore();
+   // const analytics = getAnalytics(app);
+
+async function getPersonas(db: Firestore) {
+  const writingStylesCollection  = collection(db, 'writingStyles');
+  const querySnapshot  = await getDocs(writingStylesCollection);
+  const writingStylesData  = querySnapshot .docs.map(doc => doc.data());
+  return writingStylesData ;
+}
+
+
+let writingStyles: any[] = [];
+
+onMount(async () => {
+        writingStyles = await getPersonas(db);
+    });
+
+let selectedTone = ''; // To store the selected tone
+  let toneOptions = ['Option 1', 'Option 2', 'Option 3']; // Add your tone options here
+
+
 
 	let context = ''
 	let recipientName = ''
@@ -24,10 +62,10 @@
 			yourName = 'Mohammed';
 			writingExample = "";
 		}else if(styleName == 'Erick'){
-			yourName = 'Erick Soto';
+			yourName = 'Erick' //writingStyles[1]?.personaName;
 			const response = await fetch(`${process.cwd()}/emailSamples/Erick-email-samples.txt`);
 			const text = await response.text();
-			writingExample = text;
+			writingExample = text;//writingStyles.find(style => style.personaName == "Bob")?.writingExample;
 		}
   	console.log(`${styleName}'s Style button clicked!`);
 	};
@@ -38,6 +76,7 @@
 		error = false
 		answer = ''
 		context = ''
+		writingExample = writingStyles.find(style => style.personaName == yourName)?.writingExample; // assigns writing style of binded yourname value selected in drop down menu.
 		context = "Write an email to " + recipientName + ", from " + yourName + " and " + emailContext + 
 		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
 		+ writingExample;
@@ -89,11 +128,11 @@
     <a href="/about" class="tablink">About Page</a>
 </div>
 
-<div style="display: flex; flex-direction: row; align-items: center;">
+<!-- <div style="display: flex; flex-direction: row; align-items: center;">
 	<button on:click={() => handleButtonClick('Shakespeare')} style="margin-right: 20px;">Shakespeare's Style</button>
 	<button on:click={() => handleButtonClick('Mohammmed')} style="margin-right: 20px;">Mohammed's Style</button>
 	<button on:click={() => handleButtonClick('Erick')}>Erick's Style</button>
-</div>
+</div> -->
 
 
 
@@ -101,6 +140,18 @@
 <h1>Write Emails In My Writing Style</h1>
 
 <form on:submit|preventDefault={() => handleSubmit()}>
+	
+	
+	<div style="display: flex; align-items: center;">
+		<label for="recipientName" style="margin-right: 10px;">Tone(persona)</label>
+	
+	</div>
+	<select style="margin-bottom: 10px;" bind:value={yourName}>
+		{#each writingStyles as style}
+		  <option value={style.personaName}>{style.personaName}</option>
+		{/each}
+	</select>
+
 	<div style="display: flex; align-items: center; margin-bottom: 10px;">
 		<label for="recipientName" style="margin-right: 10px;">Recipient Name</label>
 		<textarea name="recipientName" rows="1" style="flex: 1;" bind:value={recipientName}></textarea>
@@ -118,3 +169,14 @@
 	</div>
 
 </form>
+
+<style>
+	/* Add a style block to apply CSS styles */
+	select {
+	  color: black; /* Change the font color to black or another suitable color */
+	  background-color: white; /* Set the background color */
+	  padding: 8px; /* Add some padding for better appearance */
+	  border: 1px solid #ccc; /* Add a border for better visual separation */
+	  border-radius: 4px; /* Optional: Add border radius for rounded corners */
+	}
+  </style>
