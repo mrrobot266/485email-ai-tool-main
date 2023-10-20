@@ -8,6 +8,8 @@
     import { getAnalytics } from "firebase/analytics";
     import { onMount } from 'svelte';
 
+	import FieldWrapper from "../components/field-wrapper.svelte"
+
     const firebaseConfig = {
   apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
   authDomain: "touchpoint-capstone-database.firebaseapp.com",
@@ -46,6 +48,7 @@ let selectedTone = ''; // To store the selected tone
 	let yourName = ''
 	let emailContext = ''
 	let writingExample = ''
+	
 
 	let loading = false
 	let error = false
@@ -88,7 +91,8 @@ let selectedTone = ''; // To store the selected tone
 			payload: JSON.stringify({ context })
 		})
 
-		context = ''
+		context = 	
+''
 
 		eventSource.addEventListener('error', (e) => {
 			error = true
@@ -121,13 +125,6 @@ let selectedTone = ''; // To store the selected tone
 	}
 </script>
 
-<div class="fullpage">
-    <a href="/home" class="tablink">Home Page</a>
-    <a href="/" class="tablinkcurrent">Email Writing Tool</a>
-    <a href="/saveVoice" class="tablink">Save Voice Style</a>
-    <a href="/about" class="tablink">About Page</a>
-</div>
-
 <!-- <div style="display: flex; flex-direction: row; align-items: center;">
 	<button on:click={() => handleButtonClick('Shakespeare')} style="margin-right: 20px;">Shakespeare's Style</button>
 	<button on:click={() => handleButtonClick('Mohammmed')} style="margin-right: 20px;">Mohammed's Style</button>
@@ -135,48 +132,100 @@ let selectedTone = ''; // To store the selected tone
 </div> -->
 
 
+<form class="max-w-md w-full m-auto flex flex-col items-center p-12" on:submit|preventDefault={() => handleSubmit()}>
+	<div class="text-3xl font-semibold">Write Emails In My Writing Style</div>
+	<div class="text-sm text-dull my-6">Please fill out the details</div>
 
-
-<h1>Write Emails In My Writing Style</h1>
-
-<form on:submit|preventDefault={() => handleSubmit()}>
-	
-	
-	<div style="display: flex; align-items: center;">
-		<label for="recipientName" style="margin-right: 10px;">Tone(persona)</label>
-	
-	</div>
-	<select style="margin-bottom: 10px;" bind:value={yourName}>
-		{#each writingStyles as style}
-		  <option value={style.personaName}>{style.personaName}</option>
-		{/each}
-	</select>
-
-	<div style="display: flex; align-items: center; margin-bottom: 10px;">
-		<label for="recipientName" style="margin-right: 10px;">Recipient Name</label>
-		<textarea name="recipientName" rows="1" style="flex: 1;" bind:value={recipientName}></textarea>
-	</div>
-
-	<label for="emailContext" style="margin-right: 10px;">What is the email about?</label>
-	<textarea name="emailContext" rows="2" style="flex: 1;" bind:value={emailContext}></textarea>
-
-	<button>Write Email</button>
-	<div class="pt-4">
-		<h2>Generated Email:</h2>
+	<div class="w-full p-4">
+		<FieldWrapper 
+			label="Tone(persona)"
+		>
+			<div class="relative">
+				<select placeholder="Select" class="form-field w-full" bind:value={yourName}>
+					<option value="">Select</option>
+					{#each writingStyles as style}
+					<option value={style.personaName}>{style.personaName}</option>
+					{/each}
+				</select>
+				<span class="absolute right-4 top-5 arrow"/>
+			</div>
+		</FieldWrapper>
+		<FieldWrapper 
+			label="Recipient Name"
+			id="recipientName"
+		>
+			<input 
+				class="form-field"
+				name="recipientName" 
+				bind:value={recipientName} 
+				placeholder="Enter Recipient Name Here"
+			/>
+		</FieldWrapper>
+		<FieldWrapper 
+			label="What is the email about?"
+			id="emailContext"
+		>
+			<textarea 
+				class="form-field h-52"
+				name="emailContext" 
+				rows="1" 
+				bind:value={emailContext} 
+			/>
+		</FieldWrapper>
+		<button class="bg-secondary w-full p-4 rounded-md my-2">Write Email</button>
+		<div class="my-8 border-[0] border-b border-line"/>
 		{#if answer}
-			<textarea rows="20" bind:value={answer} style="width: 100%;"></textarea>
+			<FieldWrapper 
+				label="Generated Email"
+			>
+				<textarea 
+					class="form-field" 
+					rows="20" 
+					bind:value={answer} 
+				/>
+			</FieldWrapper>
 		{/if}
 	</div>
-
 </form>
 
 <style>
-	/* Add a style block to apply CSS styles */
-	select {
-	  color: black; /* Change the font color to black or another suitable color */
-	  background-color: white; /* Set the background color */
-	  padding: 8px; /* Add some padding for better appearance */
-	  border: 1px solid #ccc; /* Add a border for better visual separation */
-	  border-radius: 4px; /* Optional: Add border radius for rounded corners */
+	.form-field {
+		background: transparent;
+		border: 1px solid white;
+		font-size: 18px;
+		padding: 10px;
+		border-radius: 10px;
 	}
-  </style>
+	option {
+		color: black;
+	}
+	::-ms-input-placeholder { /* Edge 12-18 */
+		color: white;
+	}
+
+	::placeholder {
+		color: white;
+	}
+	select {
+		/* for Firefox */
+		-moz-appearance: none;
+		/* for Chrome */
+		-webkit-appearance: none;
+		cursor: pointer;
+	}
+
+	/* For IE10 */
+	select::-ms-expand {
+		display: none;
+	}
+	.arrow {
+		width: 0; 
+		height: 0; 
+		border-left: 12px solid transparent;
+		border-right: 12px solid transparent;
+		
+		border-top: 12px solid white;
+		border-radius: 4px;
+		pointer-events: none;
+	}
+</style>
