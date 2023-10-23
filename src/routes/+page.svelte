@@ -38,8 +38,9 @@ onMount(async () => {
         writingStyles = await getPersonas(db);
     });
 
-let selectedTone = ''; // To store the selected tone
-  let toneOptions = ['Option 1', 'Option 2', 'Option 3']; // Add your tone options here
+
+let selectedEmailType = ''; // To store the selected tone
+  let emailOptions = ['General Email', 'Email Drip Campaign']; // Add your tone options here
 
 
 
@@ -136,7 +137,23 @@ let selectedTone = ''; // To store the selected tone
 	<div class="text-3xl font-semibold">Write Emails In My Writing Style</div>
 	<div class="text-sm text-dull my-6">Please fill out the details</div>
 
+	
+
 	<div class="w-full p-4">
+		<FieldWrapper 
+			label="Select email type"
+		>
+			<div class="relative">
+				<select placeholder="Select" class="form-field w-full" bind:value={selectedEmailType}>
+					<option value="">Select</option>
+					{#each emailOptions as eachoption}
+					<option value={eachoption}>{eachoption}</option>
+					{/each}
+				</select>
+				<span class="absolute right-4 top-5 arrow"/>
+			</div>
+		</FieldWrapper>
+
 		<FieldWrapper 
 			label="Tone(persona)"
 		>
