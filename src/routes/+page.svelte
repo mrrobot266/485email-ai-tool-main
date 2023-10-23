@@ -38,6 +38,12 @@ onMount(async () => {
         writingStyles = await getPersonas(db);
     });
 
+
+let selectedEmailType = ''; // To store the selected tone
+  let emailOptions = ['General Email', 'Email Drip Campaign']; // Add your tone options here
+
+
+
 	let context = ''
 	let recipientName = ''
 	let yourName = ''
@@ -121,7 +127,7 @@ onMount(async () => {
 	<div class="text-3xl font-semibold">Write Emails In My Writing Style</div>
 	<div class="text-sm text-dull my-6">Please fill out the details</div>
 
-I fixed it okay 
+
 
 	<div class="w-full p-4">
 		<FieldWrapper 
