@@ -38,12 +38,6 @@ onMount(async () => {
         writingStyles = await getPersonas(db);
     });
 
-
-let selectedEmailType = ''; // To store the selected tone
-  let emailOptions = ['General Email', 'Email Drip Campaign']; // Add your tone options here
-
-
-
 	let context = ''
 	let recipientName = ''
 	let yourName = ''
@@ -55,24 +49,7 @@ let selectedEmailType = ''; // To store the selected tone
 	let error = false
 	let answer = ''
 
-	const handleButtonClick = async (styleName: string) => {
-  // Perform the action you want here
-		if(styleName == 'Shakespeare'){
-			yourName = 'William Shakespeare';
-			const response = await fetch(`${process.cwd()}/emailSamples/Shakespeare-email-samples.txt`);
-			const text = await response.text();
-			writingExample = text;
-		}else if(styleName == 'Mohammmed'){
-			yourName = 'Mohammed';
-			writingExample = "";
-		}else if(styleName == 'Erick'){
-			yourName = 'Erick' //writingStyles[1]?.personaName;
-			const response = await fetch(`${process.cwd()}/emailSamples/Erick-email-samples.txt`);
-			const text = await response.text();
-			writingExample = text;//writingStyles.find(style => style.personaName == "Bob")?.writingExample;
-		}
-  	console.log(`${styleName}'s Style button clicked!`);
-	};
+	let emailCampaignContext = ''
 
 
 	const handleSubmit = async () => {
@@ -81,9 +58,16 @@ let selectedEmailType = ''; // To store the selected tone
 		answer = ''
 		context = ''
 		writingExample = writingStyles.find(style => style.personaName == yourName)?.writingExample; // assigns writing style of binded yourname value selected in drop down menu.
+		if(selectedEmailType == 'Email Drip Campaign'){
+			emailCampaignContext = "Create a email drip marketing campaign with the goal of engaging and converting subscribers. Craft a series of 3 emails designed to gradually build interest and trust in the featured product or service. Your campaign should take recipients on a journey, starting with an introduction and culminating in a compelling call to action. Each email in the series should have a clear purpose, such as educating, providing value, showcasing features, and encouraging conversions. Tailor the content and style to resonate with the target audience's preferences and also include emojis."
+			context = emailCampaignContext + " Write these emails to " + recipientName + ", from " + yourName + ", and " + emailContext + ". Remember all the important information I told you before and write all 3 emails at once and separate them with Email 1, Email 2, and Email 3. "
+		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
+		+ writingExample;
+		}else { 
 		context = "Write an email to " + recipientName + ", from " + yourName + " and " + emailContext + 
 		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
 		+ writingExample;
+		}
 
 		const eventSource = new SSE('/api/explain', {
 			headers: {
@@ -137,7 +121,7 @@ let selectedEmailType = ''; // To store the selected tone
 	<div class="text-3xl font-semibold">Write Emails In My Writing Style</div>
 	<div class="text-sm text-dull my-6">Please fill out the details</div>
 
-	
+I fixed it okay 
 
 	<div class="w-full p-4">
 		<FieldWrapper 
