@@ -1,7 +1,9 @@
 <script>
 	import '../app.css'
+	import Header from '../components/header.svelte';
 </script>
 
-<div class="flex flex-col items-center py-14">
+<div class="bg-primary h-screen text-white">
+	<Header />
 	<slot />
 </div>

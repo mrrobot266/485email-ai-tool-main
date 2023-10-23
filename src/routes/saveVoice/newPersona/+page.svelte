@@ -63,12 +63,6 @@
 
 
 <div class="fullpage">
-    
-    <a href="/home" class="tablink">Home Page</a>
-    <a href="/" class="tablink">Email Writing Tool</a>
-    <a href="/saveVoice" class="tablinkcurrent">Save Voice Style</a>
-    <a href="/about" class="tablink">About Page</a>
-    
 
     <h1 style="margin-bottom: 10px;">Create Your Unique Persona</h1>
     <h4 style="margin-bottom: 50px;">Save your writing style so your persona can be used later on and Touchpoint A.I will write like you.</h4>
