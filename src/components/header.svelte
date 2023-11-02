@@ -15,6 +15,10 @@
             link: "/saveVoice"
         },
         {
+            label: "Content Creator",
+            link: "/contentCreator"
+        },
+        {
             label: "About Page",
             link: "/about"
         }
