@@ -40,7 +40,7 @@ onMount(async () => {
 
 
 let selectedEmailType = ''; // To store the selected tone
-  let emailOptions = ['General Email', 'Email Drip Campaign']; // Add your tone options here
+   let emailOptions = ['General Email', 'Email Drip Campaign', 'Respond to Email']; // Add your tone options here
 
 
 
@@ -65,10 +65,10 @@ let selectedEmailType = ''; // To store the selected tone
 		context = ''
 		writingExample = writingStyles.find(style => style.personaName == yourName)?.writingExample; // assigns writing style of binded yourname value selected in drop down menu.
 		if(selectedEmailType == 'Email Drip Campaign'){
-			emailCampaignContext = "Create a email drip marketing campaign with the goal of engaging and converting subscribers. Craft a series of 3 emails designed to gradually build interest and trust in the featured product or service. Your campaign should take recipients on a journey, starting with an introduction and culminating in a compelling call to action. Each email in the series should have a clear purpose, such as educating, providing value, showcasing features, and encouraging conversions. Tailor the content and style to resonate with the target audience's preferences and also include emojis."
-			context = emailCampaignContext + " Write these emails to " + recipientName + ", from " + yourName + ", and " + emailContext + ". Remember all the important information I told you before and write all 3 emails at once and separate them with Email 1, Email 2, and Email 3. "
-		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
-		+ writingExample;
+			emailCampaignContext = "Create an email drip marketing campaign about" + emailContext;
+			context = emailCampaignContext + " With the recipient being " + recipientName + ", from " + yourName + ". Seperate it into 3 emails and write it in my tone and style and add emojis: " + writingExample;
+		}else if(selectedEmailType == 'Respond to Email'){ 
+		context = "Write an email response to " + recipientName + ", from " + yourName + " : " + emailContext;
 		}else { 
 		context = "Write an email to " + recipientName + ", from " + yourName + " and " + emailContext + 
 		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
