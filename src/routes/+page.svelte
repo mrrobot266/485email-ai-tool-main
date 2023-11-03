@@ -1,238 +1,122 @@
-<script lang="ts">
-	import type { CreateCompletionResponse } from 'openai'
-	import { SSE } from 'sse.js'
-	//import { Link } from 'svelte-navigator';
-    import { initializeApp } from 'firebase/app';
-    import { getFirestore, setDoc, getDocs, collection, Firestore } from 'firebase/firestore';
-    import { docStore } from "sveltefire";
-    import { getAnalytics } from "firebase/analytics";
-    import { onMount } from 'svelte';
+<script>
+  import Fa from 'svelte-fa'
+  import { faHeadset, faAd, faComments, faCircleNodes, faPeopleGroup, faRocket, faCalendarCheck, faVolumeHigh, faUsersRays } from '@fortawesome/free-solid-svg-icons'
 
-	import FieldWrapper from "../components/field-wrapper.svelte"
-
-    const firebaseConfig = {
-  apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
-  authDomain: "touchpoint-capstone-database.firebaseapp.com",
-  projectId: "touchpoint-capstone-database",
-  storageBucket: "touchpoint-capstone-database.appspot.com",
-  messagingSenderId: "1032080279652",
-  appId: "1:1032080279652:web:9a53f2acb5069e91513771",
-  measurementId: "G-HH2QG68FLN"
-};
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore();
-   // const analytics = getAnalytics(app);
-
-async function getPersonas(db: Firestore) {
-  const writingStylesCollection  = collection(db, 'writingStyles');
-  const querySnapshot  = await getDocs(writingStylesCollection);
-  const writingStylesData  = querySnapshot .docs.map(doc => doc.data());
-  return writingStylesData ;
-}
-
-
-let writingStyles: any[] = [];
-
-onMount(async () => {
-        writingStyles = await getPersonas(db);
-    });
-
-
-let selectedEmailType = ''; // To store the selected tone
-  let emailOptions = ['General Email', 'Email Drip Campaign']; // Add your tone options here
-
-
-
-	let context = ''
-	let recipientName = ''
-	let yourName = ''
-	let emailContext = ''
-	let writingExample = ''
+	const whatWeDos = [
+	  {
+		title: "Sales Outreach",
+		desc: "Draft engaging emails that grab your leads' attention and spark interest.",
+		icon: faUsersRays
+	  },
+	  {
+		title: "Customer Support",
+		desc: "Craft responsive emails ensuring clients feel heard and valued every step of the way.",
+		icon: faHeadset
+	  },
+	  {
+		title: "Marketing Campaigns",
+		desc: "Create captivating email campaigns that resonate with your audience and drive conversions.",
+		icon: faAd
+	  },
+	  {
+		title: "Internal Communication",
+		desc: "Design internal emails that keep teams informed, aligned, and motivated.",
+		icon: faComments
+	  },
+	  {
+		title: "Networking",
+		desc: "Construct meaningful emails that foster connections and open doors to new opportunities.",
+		icon: faCircleNodes
+	  },
+	  {
+		title: "Recruitment",
+		desc: "Generate compelling emails that attract top talent and build strong teams.",
+		icon: faPeopleGroup
+	  },
+	  {
+		title: "Product Launches",
+		desc: "Design announcement emails that build anticipation and excitement around your new products.",
+		icon: faRocket
+	  },
+	  {
+		title: "Event Promotions",
+		desc: "Create buzzworthy emails that drive attendance and engagement for your events.",
+		icon: faCalendarCheck
+	  },
+	  {
+		title: "DRIP Campaigns",
+		desc: "Sequence insightful emails that nurture leads, guiding them from interest to conversion seamlessly.",
+		icon: faVolumeHigh
+	  }
+	]
+  
+  </script>
+  
 	
-
-	let loading = false
-	let error = false
-	let answer = ''
-
-	let emailCampaignContext = ''
-
-
-	const handleSubmit = async () => {
-		loading = true
-		error = false
-		answer = ''
-		context = ''
-		writingExample = writingStyles.find(style => style.personaName == yourName)?.writingExample; // assigns writing style of binded yourname value selected in drop down menu.
-		if(selectedEmailType == 'Email Drip Campaign'){
-			emailCampaignContext = "Create a email drip marketing campaign with the goal of engaging and converting subscribers. Craft a series of 3 emails designed to gradually build interest and trust in the featured product or service. Your campaign should take recipients on a journey, starting with an introduction and culminating in a compelling call to action. Each email in the series should have a clear purpose, such as educating, providing value, showcasing features, and encouraging conversions. Tailor the content and style to resonate with the target audience's preferences and also include emojis."
-			context = emailCampaignContext + " Write these emails to " + recipientName + ", from " + yourName + ", and " + emailContext + ". Remember all the important information I told you before and write all 3 emails at once and separate them with Email 1, Email 2, and Email 3. "
-		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
-		+ writingExample;
-		}else { 
-		context = "Write an email to " + recipientName + ", from " + yourName + " and " + emailContext + 
-		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
-		+ writingExample;
-		}
-
-		const eventSource = new SSE('/api/explain', {
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			payload: JSON.stringify({ context })
-		})
-
-		context = 	
-''
-
-		eventSource.addEventListener('error', (e) => {
-			error = true
-			loading = false
-			alert('Something went wrong!')
-		})
-
-		eventSource.addEventListener('message', (e) => {
-			try {
-				loading = false
-
-				if (e.data === '[DONE]') {
-					return
-				}
-
-				const completionResponse: CreateCompletionResponse = JSON.parse(e.data)
-
-				const [{ text }] = completionResponse.choices
-
-				answer = (answer ?? '') + text
-			} catch (err) {
-				error = true
-				loading = false
-				console.error(err)
-				alert('Something went wrong!')
-			}
-		})
-
-		eventSource.stream()
-	}
-</script>
-
-<!-- <div style="display: flex; flex-direction: row; align-items: center;">
-	<button on:click={() => handleButtonClick('Shakespeare')} style="margin-right: 20px;">Shakespeare's Style</button>
-	<button on:click={() => handleButtonClick('Mohammmed')} style="margin-right: 20px;">Mohammed's Style</button>
-	<button on:click={() => handleButtonClick('Erick')}>Erick's Style</button>
-</div> -->
-
-
-<form class="max-w-md w-full m-auto flex flex-col items-center p-12" on:submit|preventDefault={() => handleSubmit()}>
-	<div class="text-3xl font-semibold">Write Emails In My Writing Style</div>
-	<div class="text-sm text-dull my-6">Please fill out the details</div>
-
-
-
-	<div class="w-full p-4">
-		<FieldWrapper 
-			label="Select email type"
-		>
-			<div class="relative">
-				<select placeholder="Select" class="form-field w-full" bind:value={selectedEmailType}>
-					<option value="">Select</option>
-					{#each emailOptions as eachoption}
-					<option value={eachoption}>{eachoption}</option>
-					{/each}
-				</select>
-				<span class="absolute right-4 top-5 arrow"/>
-			</div>
-		</FieldWrapper>
-
-		<FieldWrapper 
-			label="Tone(persona)"
-		>
-			<div class="relative">
-				<select placeholder="Select" class="form-field w-full" bind:value={yourName}>
-					<option value="">Select</option>
-					{#each writingStyles as style}
-					<option value={style.personaName}>{style.personaName}</option>
-					{/each}
-				</select>
-				<span class="absolute right-4 top-5 arrow"/>
-			</div>
-		</FieldWrapper>
-		<FieldWrapper 
-			label="Recipient Name"
-			id="recipientName"
-		>
-			<input 
-				class="form-field"
-				name="recipientName" 
-				bind:value={recipientName} 
-				placeholder="Enter Recipient Name Here"
-			/>
-		</FieldWrapper>
-		<FieldWrapper 
-			label="What is the email about?"
-			id="emailContext"
-		>
-			<textarea 
-				class="form-field h-52"
-				name="emailContext" 
-				rows="1" 
-				bind:value={emailContext} 
-			/>
-		</FieldWrapper>
-		<button class="bg-secondary w-full p-4 rounded-md my-2">Write Email</button>
-		<div class="my-8 border-[0] border-b border-line"/>
-		{#if answer}
-			<FieldWrapper 
-				label="Generated Email"
-			>
-				<textarea 
-					class="form-field" 
-					rows="20" 
-					bind:value={answer} 
-				/>
-			</FieldWrapper>
-		{/if}
+  
+  <div class="section flex p-16 pb-24 items-center px-72">
+	<div class="w-1/2">
+	  <div class="text-5xl">
+		Automate your Emails with the Power of AI
+		<div class="text-dull mt-4 text-sm">
+			Supercharge Your Email Workflow with AI Automation! Harness the power of artificial intelligence to streamline and optimize your email communication. 
+			Say goodbye to repetitive tasks and hello to smarter, more efficient email management.		</div>
+	  </div>
+	  <a href="/email-writing">
+		<button class="bg-secondary w-96 p-4 rounded-md my-8">
+		  Start Now
+		</button>
+	  </a>
 	</div>
-</form>
-
-<style>
-	.form-field {
-		background: transparent;
-		border: 1px solid white;
-		font-size: 18px;
-		padding: 10px;
-		border-radius: 10px;
+	<div class="text-right w-1/2">
+		<img src="automation.png" alt="automation"/>
+	</div>
+  </div>
+  
+  <div class="section globe-bg relative">
+	<div class="absolute left-0 right-0 top-0 bottom-0 overlay py-16">
+		<div class="text-6xl text-center">
+		What We Do
+		</div>
+		<div class="grid grid-cols-3 px-72 gap-20 mt-20">
+		{#each whatWeDos as item}
+			<div class="flex items-start cursor-pointer hover:bg-highlight p-4 rounded-lg">
+				<span class="pr-8 pt-2">
+					<Fa icon={item.icon} size="lg" />
+				</span>
+				<div>
+					<div class="text-2xl">{ item.title }</div>
+					<div class="text-dull mt-4 text-sm">
+						{ item.desc }
+					</div>
+				</div>
+			</div>
+		{/each}
+		</div>
+	</div>
+  </div> 
+  <div class="p-16 pb-24 items-center px-72 flex flex-col justify-center items-center">
+	<div class="text-4xl text-center">
+		Want to see what else we offer? 🌟
+	</div>
+	<div class="mt-10">
+		<a href="https://touchpointdigitalmarketing.com/" target="_blank">
+			<button class="bg-secondary w-96 p-4 rounded-md my-8">
+				Visit Main Website
+			</button>
+		</a>
+	</div>
+  </div>
+  
+  <style>
+	.globe-bg {
+		background: url('bg2.jpeg');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
 	}
-	option {
-		color: black;
+	.overlay {
+		background-color:rgba(0, 0, 0, 0.6);
 	}
-	::-ms-input-placeholder { /* Edge 12-18 */
-		color: white;
-	}
-
-	::placeholder {
-		color: white;
-	}
-	select {
-		/* for Firefox */
-		-moz-appearance: none;
-		/* for Chrome */
-		-webkit-appearance: none;
-		cursor: pointer;
-	}
-
-	/* For IE10 */
-	select::-ms-expand {
-		display: none;
-	}
-	.arrow {
-		width: 0; 
-		height: 0; 
-		border-left: 12px solid transparent;
-		border-right: 12px solid transparent;
-		
-		border-top: 12px solid white;
-		border-radius: 4px;
-		pointer-events: none;
-	}
-</style>
+  </style>
+  

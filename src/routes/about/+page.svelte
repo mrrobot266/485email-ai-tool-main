@@ -1,11 +1,5 @@
 <div class="p-8">
-    <body>
-        <a href="/home" class="tablink">Home Page</a>
-        <a href="/" class="tablink">Email Writing Tool</a>
-        <a href="/saveVoice" class="tablink">Save Voice Style</a>
-        <a href="/about" class="tablinkcurrent">About Page</a>
-    </body>
- <h1 class="text-2xl font-bold mb-4">About Us</h1>
+    <h1 class="text-2xl font-bold mb-4">About Us</h1>
     <h2 class="text-xl font-semibold mt-4">Welcome to Touch Point Digital Marketing Agency</h2>
     <p class="mt-4">At Touch Point Digital Marketing Agency, we're dedicated to revolutionizing the marketing landscape through the power of Artificial Intelligence. Our innovative project leverages cutting-edge technology, including the renowned ChatGPT, alongside integration with various other tools via APIs.</p>
     
@@ -32,13 +26,3 @@
     <h2 class="text-xl font-semibold mt-4">Join Us in Shaping the Future of Marketing</h2>
     <p class="mt-4">We invite you to be a part of this exciting journey. Together, we'll redefine marketing practices and unlock new possibilities with AI technology. Contact us today to explore how Touch Point Digital Marketing Agency can revolutionize your marketing strategy.</p>
 </div>
-
-<style>
-    /* Set width to 100% and use flex display for horizontal alignment */
-    .about {
-        width: 100%;
-        text-align: center;
-        display: block;
-        justify-content: space-around; /* To evenly space the tab links */
-    }
-</style>
