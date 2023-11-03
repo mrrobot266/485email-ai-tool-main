@@ -177,6 +177,7 @@ let selectedEmailType = ''; // To store the selected tone
 				name="emailContext" 
 				rows="1" 
 				bind:value={emailContext} 
+				style="color: white;"
 			/>
 		</FieldWrapper>
 		<button class="bg-secondary w-full p-4 rounded-md my-2">Write Email</button>
@@ -189,6 +190,7 @@ let selectedEmailType = ''; // To store the selected tone
 					class="form-field" 
 					rows="20" 
 					bind:value={answer} 
+					style="color: white;"
 				/>
 			</FieldWrapper>
 		{/if}
