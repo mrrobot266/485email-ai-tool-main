@@ -13,18 +13,9 @@ npm create svelte@latest
 # create a new project in my-app
 npm create svelte@latest my-app
 ```
-
-
-If you dowload this github zip you can ignore the above. run the 2 npm commands below: 
 #main
 npm i openai common-tags
 npm i @types/common-tags -D
-
-Firebase commands:(run these commands to install firebase libraries)
-npm install firebase
-npm install sveltefire --legacy-peer-deps
-
-
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
