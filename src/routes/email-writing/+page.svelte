@@ -1,41 +1,45 @@
 <script lang="ts">
 	import type { CreateCompletionResponse } from 'openai'
 	import { SSE } from 'sse.js'
+	//import { Link } from 'svelte-navigator';
     import { initializeApp } from 'firebase/app';
-    import { getFirestore, getDocs, collection, Firestore } from 'firebase/firestore';
+    import { getFirestore, setDoc, getDocs, collection, Firestore } from 'firebase/firestore';
+    import { docStore } from "sveltefire";
+    import { getAnalytics } from "firebase/analytics";
     import { onMount } from 'svelte';
 	import FieldWrapper from "../../components/field-wrapper.svelte"
 
     const firebaseConfig = {
-		apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
-		authDomain: "touchpoint-capstone-database.firebaseapp.com",
-		projectId: "touchpoint-capstone-database",
-		storageBucket: "touchpoint-capstone-database.appspot.com",
-		messagingSenderId: "1032080279652",
-		appId: "1:1032080279652:web:9a53f2acb5069e91513771",
-		measurementId: "G-HH2QG68FLN"
-	};
+  apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
+  authDomain: "touchpoint-capstone-database.firebaseapp.com",
+  projectId: "touchpoint-capstone-database",
+  storageBucket: "touchpoint-capstone-database.appspot.com",
+  messagingSenderId: "1032080279652",
+  appId: "1:1032080279652:web:9a53f2acb5069e91513771",
+  measurementId: "G-HH2QG68FLN"
+};
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore();
    // const analytics = getAnalytics(app);
 
-	async function getPersonas(db: Firestore) {
-	const writingStylesCollection  = collection(db, 'writingStyles');
-	const querySnapshot  = await getDocs(writingStylesCollection);
-	const writingStylesData  = querySnapshot .docs.map(doc => doc.data());
-	return writingStylesData ;
-	}
+async function getPersonas(db: Firestore) {
+  const writingStylesCollection  = collection(db, 'writingStyles');
+  const querySnapshot  = await getDocs(writingStylesCollection);
+  const writingStylesData  = querySnapshot .docs.map(doc => doc.data());
+  return writingStylesData ;
+}
 
 
-	let writingStyles: any[] = [];
+let writingStyles: any[] = [];
 
-	onMount(async () => {
+onMount(async () => {
         writingStyles = await getPersonas(db);
     });
 
-	let selectedTone = ''; // To store the selected tone
-  	let toneOptions = ['Option 1', 'Option 2', 'Option 3']; // Add your tone options here
+
+let selectedEmailType = ''; // To store the selected tone
+   let emailOptions = ['General Email', 'Email Drip Campaign', 'Respond to Email']; // Add your tone options here
 
 
 
@@ -50,24 +54,7 @@
 	let error = false
 	let answer = ''
 
-	const handleButtonClick = async (styleName: string) => {
-  // Perform the action you want here
-		if(styleName == 'Shakespeare'){
-			yourName = 'William Shakespeare';
-			const response = await fetch(`${process.cwd()}/emailSamples/Shakespeare-email-samples.txt`);
-			const text = await response.text();
-			writingExample = text;
-		}else if(styleName == 'Mohammmed'){
-			yourName = 'Mohammed';
-			writingExample = "";
-		}else if(styleName == 'Erick'){
-			yourName = 'Erick' //writingStyles[1]?.personaName;
-			const response = await fetch(`${process.cwd()}/emailSamples/Erick-email-samples.txt`);
-			const text = await response.text();
-			writingExample = text;//writingStyles.find(style => style.personaName == "Bob")?.writingExample;
-		}
-  	console.log(`${styleName}'s Style button clicked!`);
-	};
+	let emailCampaignContext = ''
 
 
 	const handleSubmit = async () => {
@@ -76,9 +63,16 @@
 		answer = ''
 		context = ''
 		writingExample = writingStyles.find(style => style.personaName == yourName)?.writingExample; // assigns writing style of binded yourname value selected in drop down menu.
+		if(selectedEmailType == 'Email Drip Campaign'){
+			emailCampaignContext = "Create an email drip marketing campaign about" + emailContext;
+			context = emailCampaignContext + " With the recipient being " + recipientName + ", from " + yourName + ". Seperate it into 3 emails and write it in my tone and style and add emojis: " + writingExample;
+		}else if(selectedEmailType == 'Respond to Email'){ 
+		context = "Write an email response to " + recipientName + ", from " + yourName + " : " + emailContext;
+		}else { 
 		context = "Write an email to " + recipientName + ", from " + yourName + " and " + emailContext + 
 		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
 		+ writingExample;
+		}
 
 		const eventSource = new SSE('/api/explain', {
 			headers: {
@@ -127,6 +121,20 @@
 
 	<div class="w-full p-4">
 		<FieldWrapper 
+			label="Select email type"
+		>
+			<div class="relative">
+				<select placeholder="Select" class="form-field w-full" bind:value={selectedEmailType}>
+					<option value="">Select</option>
+					{#each emailOptions as eachoption}
+					<option value={eachoption}>{eachoption}</option>
+					{/each}
+				</select>
+				<span class="absolute right-4 top-5 arrow"/>
+			</div>
+		</FieldWrapper>
+
+		<FieldWrapper 
 			label="Tone(persona)"
 		>
 			<div class="relative">
@@ -144,12 +152,13 @@
 			id="recipientName"
 		>
 			<input 
-				class="form-field"
+				class="form-field w-full"
 				name="recipientName" 
 				bind:value={recipientName} 
 				placeholder="Enter Recipient Name Here"
 			/>
 		</FieldWrapper>
+		
 		<FieldWrapper 
 			label="What is the email about?"
 			id="emailContext"
@@ -159,6 +168,7 @@
 				name="emailContext" 
 				rows="1" 
 				bind:value={emailContext} 
+				style="color: white;"
 			/>
 		</FieldWrapper>
 		<button class="bg-secondary w-full p-4 rounded-md my-2">Write Email</button>
@@ -171,8 +181,51 @@
 					class="form-field" 
 					rows="20" 
 					bind:value={answer} 
+					style="color: white;"
 				/>
 			</FieldWrapper>
 		{/if}
 	</div>
 </form>
+
+<style>
+	.form-field {
+		background: transparent;
+		border: 1px solid white;
+		font-size: 18px;
+		padding: 10px;
+		border-radius: 10px;
+	}
+	option {
+		color: black;
+	}
+	::-ms-input-placeholder { /* Edge 12-18 */
+		color: white;
+	}
+
+	::placeholder {
+		color: gray;
+	}
+	select {
+		/* for Firefox */
+		-moz-appearance: none;
+		/* for Chrome */
+		-webkit-appearance: none;
+		cursor: pointer;
+	}
+
+	/* For IE10 */
+	select::-ms-expand {
+		display: none;
+	}
+	.arrow {
+		width: 0; 
+		height: 0; 
+		border-left: 12px solid transparent;
+		border-right: 12px solid transparent;
+		
+		border-top: 12px solid white;
+		border-radius: 4px;
+		pointer-events: none;
+	}
+</style>
