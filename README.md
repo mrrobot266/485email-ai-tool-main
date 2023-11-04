@@ -24,7 +24,7 @@ Firebase commands:(run these commands to install firebase libraries)
 npm install firebase
 npm install sveltefire --legacy-peer-deps
 
-#install sse.js
+#install sse.js: 
 npm i sse.js
 ## Developing
 
