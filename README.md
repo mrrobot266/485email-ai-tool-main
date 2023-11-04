@@ -24,7 +24,8 @@ Firebase commands:(run these commands to install firebase libraries)
 npm install firebase
 npm install sveltefire --legacy-peer-deps
 
-
+#install sse.js
+npm i sse.js
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
