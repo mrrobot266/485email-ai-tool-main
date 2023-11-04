@@ -247,15 +247,7 @@ onMount(async () => {
     {/if}
     </form>
 
- 
 
-    <!-- {#if answer}
-        <div class="my-8 border-[0] border-b border-line"></div>
-        <FieldWrapper label="Generated Article:">
-            <div class="form-field" innerHTML={answer}></div>
-        </FieldWrapper>
-        <button on:click|preventDefault={copyToClipboard} class="bg-secondary w-full p-4 rounded-md my-2" disabled={copyDisabled}>Copy</button>
-    {/if} -->
         
    
 </div>
