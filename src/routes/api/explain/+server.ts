@@ -8,11 +8,6 @@ export const config: Config = {
 	runtime: 'edge'
 }
 
-
-
-
-
-
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		if (!OPENAI_KEY) {
