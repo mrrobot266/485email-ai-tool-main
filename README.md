@@ -24,6 +24,10 @@ npm install sveltefire --legacy-peer-deps
 
 #install sse.js: 
 npm i sse.js
+
+#Deploying to Vercel
+npm i @sveltejs/adapter-vercel -D
+
 ********************************************************************************
 ## Developing
 
