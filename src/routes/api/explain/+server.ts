@@ -45,7 +45,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			model: 'text-davinci-003',
 			prompt,
 			max_tokens: 1024,
-			temperature: 0.7,
+			temperature: 1,
 			stream: true
 		}
 
