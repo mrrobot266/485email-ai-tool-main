@@ -62,7 +62,7 @@
   </style>
   
   <div class="container p-8 relative text-left">
-    <img src="./photo.png" alt="Cover" class="photo mb-4">
+    <img src="photo.png" alt="Cover" class="photo mb-4">
       <div class="mb-10">
           <div class="heading text-4xl inline-block underline">About Us</div>
       </div>
