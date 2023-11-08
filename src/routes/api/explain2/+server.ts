@@ -8,6 +8,7 @@ export const config: Config = {
 	runtime: 'edge'
 }
 
+
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		if (!OPENAI_KEY) {
@@ -28,7 +29,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const prompt = stripIndent`
         ${oneLine`
-		You love to help me write emails. Based on my writing style, tone and the information I provide, you will craft an email for me. Cut out any pre-text and just give me the email. 
+		You help me write comprehensive articles or article outlines. Based on my writing style, tone and the information I provide, you will craft an in depth, comprehensive article for me.
         `}
 
         Context:"""${context.trim()}"""
@@ -39,7 +40,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const completionOpts: CreateCompletionRequest = {
 			model: 'text-davinci-003',
 			prompt,
-			max_tokens: 1024,
+			max_tokens: 2000,
 			temperature: 1,
 			stream: true
 		}

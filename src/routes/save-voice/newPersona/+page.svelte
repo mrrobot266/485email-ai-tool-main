@@ -110,7 +110,7 @@
                 />
             </FieldWrapper>
             <FieldWrapper 
-				label="Generated Email"
+				label="Your Email Examples"
                 id="writingExample"
 			>
 				<textarea 

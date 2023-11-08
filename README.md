@@ -17,6 +17,18 @@ npm create svelte@latest my-app
 npm i openai common-tags
 npm i @types/common-tags -D
 
+******************************************************************************
+Firebase commands:(run these commands to install firebase libraries)
+npm install firebase
+npm install sveltefire --legacy-peer-deps
+
+#install sse.js: 
+npm i sse.js
+
+#Deploying to Vercel
+npm i @sveltejs/adapter-vercel -D
+
+********************************************************************************
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
