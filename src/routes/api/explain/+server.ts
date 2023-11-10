@@ -36,21 +36,19 @@ export const POST: RequestHandler = async ({ request }) => {
         Answer:
         `
 
-		const completionOpts: CreateCompletionRequest = {
-			model: 'text-davinci-003',
-			prompt,
-			max_tokens: 1024,
-			temperature: 1,
-			stream: true
-		}
-
 		const response = await fetch('https://api.openai.com/v1/completions', {
 			headers: {
 				Authorization: `Bearer ${OPENAI_KEY}`,
 				'Content-Type': 'application/json'
 			},
 			method: 'POST',
-			body: JSON.stringify(completionOpts)
+			body: JSON.stringify({
+				model: 'gpt-3.5-turbo-instruct',
+				prompt,
+				max_tokens: 1024,
+				temperature: 1,
+				stream: true,
+			})
 		})
 
 		if (!response.ok) {
