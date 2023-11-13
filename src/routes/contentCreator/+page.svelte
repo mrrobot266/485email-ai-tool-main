@@ -32,6 +32,11 @@ async function getPersonas(db: Firestore) {
   return writingStylesData ;
 }
 
+function parseOutline(outline: string): string[] {
+    // This is a simple example. Adapt this logic based on your actual outline format.
+    // Let's assume each section starts with a number followed by a period (e.g., "1. Introduction")
+    return outline.split(/\d+\./).filter(section => section.trim() !== '');
+}
 
 let writingStyles: any[] = [];
 
@@ -72,7 +77,8 @@ onMount(async () => {
 		answer = ''
 		context = ''
 		context = "Create an outline for a comprehensive 3000-4000 word article about " + requirement + 
-		", give speculated word counts for each section. Write it for the target audience being: " + targetAudience;
+		", give speculated word counts for each section. Write it for the target audience being: " + targetAudience +
+        ". also need to have word 'section' at begining of each section in outline";
 
 		const eventSource = new SSE('/api/explain2', { // create eventsource which opens Server sent events connection to endpoint
 			headers: {
@@ -119,9 +125,23 @@ onMount(async () => {
 		error2 = false
 		answer2 = ''
 		context = ''
-		context = "Create an article based on this outline: " + answer +
-		", Write it in this writing style and tone: " + tone + ", and inlcude these keywords: " + keywords;
+		// context = "Create an article based on this outline: " + answer +
+		// ", Write it in this writing style and tone: " + tone + ", and inlcude these keywords: " + keywords;
+        
+        const outlineSections = parseOutline(answer); // Parse the outline into sections
+        let articleSections: string[] = [];
+        for (const section of outlineSections) {
+            context = "Create content for this section: " + section.trim() +
+            ", Write it in this writing style and tone: " + tone + ", and include these keywords: " + keywords;
 
+            try {
+                const sectionContent = await generateSectionContent(context);
+                articleSections.push(sectionContent);
+            } catch (err) {
+                console.error("Error generating content for section:", err);
+                // Handle the error appropriately
+            }
+        }
 		const eventSource = new SSE('/api/explain2', {
 			headers: {
 				'Content-Type': 'application/json'
@@ -130,7 +150,7 @@ onMount(async () => {
 		})
 
 		context = ''
-
+        
 		eventSource.addEventListener('error', (e) => {
 			error2 = true
 			loading2 = false
@@ -171,6 +191,43 @@ onMount(async () => {
 		document.body.removeChild(elem)
 		alert('Copied to clipboard!')
  	}
+    async function generateSectionContent(context: string): Promise<string> {
+    // Placeholder for your API call logic
+    // Similar to the existing API call in your code
+    // Return the content for each section
+        return new Promise((resolve, reject) => {
+            const eventSource = new SSE('/api/explain2', {
+                headers: { 'Content-Type': 'application/json' },
+                payload: JSON.stringify({ context })
+            });
+
+            let sectionContent = '';
+
+            eventSource.addEventListener('error', (e) => {
+                eventSource.close();
+                reject(new Error('Error in generating content for section'));
+            });
+
+            eventSource.addEventListener('message', (e) => {
+                if (e.data === '[DONE]') {
+                    eventSource.close();
+                    resolve(sectionContent); // Resolve the promise with the accumulated content
+                    return;
+                }
+
+                try {
+                    const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
+                    const [{ text }] = completionResponse.choices;
+                    sectionContent += text;
+                } catch (err) {
+                    eventSource.close();
+                    reject(new Error('Parsing error in generating content for section'));
+                }
+            });
+
+            eventSource.stream();
+        });
+    }
 </script>
 
 <header>
