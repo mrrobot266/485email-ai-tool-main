@@ -130,6 +130,7 @@ onMount(async () => {
         });
 
         return new Promise((resolve, reject) => {
+            let sectionContent = '';
             eventSource.addEventListener('error', (e) => {
                 eventSource.close();
                 reject(new Error('Error in generating content for section'));
@@ -138,23 +139,14 @@ onMount(async () => {
             eventSource.addEventListener('message', (e) => {
                 if (e.data === '[DONE]') {
                     eventSource.close();
-                    if (sectionIndex < totalSections - 1) {
-                        // Proceed to next section
-                        requestCount++;
-                        resolve('');
-                    } else {
-                        // Final section
-                        loading2 = false;
-                        error2 = answer2 === '';
-                        resolve('');
-                    }
+                    resolve(sectionContent);
+                    requestCount++;
                     return;
                 }
-
                 try {
                     const completionResponse = JSON.parse(e.data);
                     const [{ text }] = completionResponse.choices;
-                    resolve(text);
+                    sectionContent += text;
                 } catch (err) {
                     eventSource.close();
                     reject(new Error('Parsing error in generating content for section'));
