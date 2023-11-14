@@ -33,9 +33,10 @@ async function getPersonas(db: Firestore) {
 }
 
 function parseOutline(outline: string): string[] {
-    // This is a simple example. Adapt this logic based on your actual outline format.
-    // Let's assume each section starts with a number followed by a period (e.g., "1. Introduction")
-    return outline.split(/\d+\./).filter(section => section.trim() !== '');
+
+    const sectionRegex = /Section \d+: /g;
+
+    return outline.split(sectionRegex).filter(section => section.trim() !== '');
 }
 
 let writingStyles: any[] = [];
@@ -66,7 +67,8 @@ onMount(async () => {
     let error = false;
     let answer = '';
     let copyDisabled = true;
-
+    let requestCount = 0;
+    let dividedSections = [];
     // let selectedContent = null;
     let showLogin = false; // Add this to track if the login modal should be shown
     let showHistory = false;
@@ -120,67 +122,78 @@ onMount(async () => {
 		eventSource.stream()
 	}
 
+
+    const generateSectionContent = async (context, sectionIndex, totalSections) => {
+        const eventSource = new SSE('/api/explain2', {
+            headers: { 'Content-Type': 'application/json' },
+            payload: JSON.stringify({ context })
+        });
+
+        return new Promise((resolve, reject) => {
+            eventSource.addEventListener('error', (e) => {
+                eventSource.close();
+                reject(new Error('Error in generating content for section'));
+            });
+
+            eventSource.addEventListener('message', (e) => {
+                if (e.data === '[DONE]') {
+                    eventSource.close();
+                    if (sectionIndex < totalSections - 1) {
+                        // Proceed to next section
+                        requestCount++;
+                        resolve('');
+                    } else {
+                        // Final section
+                        loading2 = false;
+                        error2 = answer2 === '';
+                        resolve('');
+                    }
+                    return;
+                }
+
+                try {
+                    const completionResponse = JSON.parse(e.data);
+                    const [{ text }] = completionResponse.choices;
+                    resolve(text);
+                } catch (err) {
+                    eventSource.close();
+                    reject(new Error('Parsing error in generating content for section'));
+                }
+            });
+
+            eventSource.stream();
+        });
+    };
+
+
     const handleSubmitArt = async () => {
-		loading2 = true
-		error2 = false
-		answer2 = ''
-		context = ''
-		// context = "Create an article based on this outline: " + answer +
-		// ", Write it in this writing style and tone: " + tone + ", and inlcude these keywords: " + keywords;
-        
+        loading2 = true;
+        error2 = false;
+        answer2 = '';
+        //console.log("Full outline:", answer);
         const outlineSections = parseOutline(answer); // Parse the outline into sections
-        let articleSections: string[] = [];
-        for (const section of outlineSections) {
+        //console.log("Divided Sections:", outlineSections);
+        dividedSections = outlineSections;
+        // Print the sections to the console
+        //console.log("Outline Sections:", outlineSections);
+        for (let i = 0; i < outlineSections.length; i++) {
+            const section = outlineSections[i];
             context = "Create content for this section: " + section.trim() +
             ", Write it in this writing style and tone: " + tone + ", and include these keywords: " + keywords;
 
             try {
-                const sectionContent = await generateSectionContent(context);
-                articleSections.push(sectionContent);
+                const sectionContent = await generateSectionContent(context, i, outlineSections.length);
+                answer2 += sectionContent; // Append the content of each section to answer2
+                requestCount++;
             } catch (err) {
                 console.error("Error generating content for section:", err);
-                // Handle the error appropriately
+                break; // Stop further processing on error
             }
         }
-		const eventSource = new SSE('/api/explain2', {
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			payload: JSON.stringify({ context })
-		})
 
-		context = ''
-        
-		eventSource.addEventListener('error', (e) => {
-			error2 = true
-			loading2 = false
-			alert('Something went wrong!')
-		})
-
-		eventSource.addEventListener('message', (e) => {
-			try {
-				loading2 = false
-
-				if (e.data === '[DONE]') {
-					//copyDisabled = false;
-					return
-				}
-
-				const completionResponse: CreateCompletionResponse = JSON.parse(e.data)
-
-				const [{ text }] = completionResponse.choices
-
-				answer2 = (answer2 ?? '') + text
-			} catch (err) {
-				error2 = true
-				loading2 = false
-				console.error(err)
-				alert('Something went wrong!')
-			}
-		})
-
-		eventSource.stream()
-	}
+        loading2 = false;
+        error2 = answer2 === ''; // If no content is generated, consider it an error
+    };
 
 	const copyToClipboard = () => {
 		const elem = document.createElement('textarea')
@@ -191,44 +204,20 @@ onMount(async () => {
 		document.body.removeChild(elem)
 		alert('Copied to clipboard!')
  	}
-    async function generateSectionContent(context: string): Promise<string> {
-    // Placeholder for your API call logic
-    // Similar to the existing API call in your code
-    // Return the content for each section
-        return new Promise((resolve, reject) => {
-            const eventSource = new SSE('/api/explain2', {
-                headers: { 'Content-Type': 'application/json' },
-                payload: JSON.stringify({ context })
-            });
 
-            let sectionContent = '';
-
-            eventSource.addEventListener('error', (e) => {
-                eventSource.close();
-                reject(new Error('Error in generating content for section'));
-            });
-
-            eventSource.addEventListener('message', (e) => {
-                if (e.data === '[DONE]') {
-                    eventSource.close();
-                    resolve(sectionContent); // Resolve the promise with the accumulated content
-                    return;
-                }
-
-                try {
-                    const completionResponse: CreateCompletionResponse = JSON.parse(e.data);
-                    const [{ text }] = completionResponse.choices;
-                    sectionContent += text;
-                } catch (err) {
-                    eventSource.close();
-                    reject(new Error('Parsing error in generating content for section'));
-                }
-            });
-
-            eventSource.stream();
-        });
-    }
 </script>
+
+<style>
+    .section-content {
+        /* Add any styles you want for the section content here */
+        padding-bottom: 10px; /* Space at the bottom of each section */
+    }
+    .section-separator {
+        height: 2px; /* The thickness of the separator line */
+        background-color: black; /* Color of the separator line */
+        margin: 10px 0; /* Space above and below the line */
+    }
+</style>
 
 <header>
     <nav>
@@ -247,6 +236,11 @@ onMount(async () => {
 <div class="max-w-md w-full m-auto flex flex-col items-center p-12">
     <h1 class="text-3xl font-semibold">Write Me an Article</h1>
     <h2 class="text-sm text-dull my-6">Please fill out the details</h2>
+    <!-- <p>Number of requests sent: {requestCount}</p> -->
+    <div class="request-count-display">
+        <p>Number of Requests Made: {requestCount}</p>
+    </div>
+
     <form on:submit|preventDefault={handleSubmit} class="w-full p-4">
         <FieldWrapper 
         label="Tone & Style"
@@ -278,30 +272,32 @@ onMount(async () => {
         
         <button class="bg-secondary w-full p-4 rounded-md my-2">Write Outline for Article</button>
         {#if answer}
-        <FieldWrapper 
-            label="Generated Outline"
+            <FieldWrapper label="Generated Outline">
+                <textarea 
+                    class="form-field" 
+                    rows="20" 
+                    bind:value={answer} 
+                    style="color: white;"
+                />
+            </FieldWrapper>
+            {#if dividedSections.length > 0}
+                <h2>Number of Divided Sections: {dividedSections.length}</h2>
+            {/if}
+        
+            <button on:click|preventDefault={copyToClipboard} class="bg-secondary w-full p-4 rounded-md my-2" disabled={copyDisabled}>Copy</button>
+            <button on:click|preventDefault={handleSubmitArt} class="bg-secondary w-full p-4 rounded-md my-2" >Generate Article</button>
+            <FieldWrapper 
+            label="Generated Article"
         >
             <textarea 
+                id = "Custom Article"
                 class="form-field" 
                 rows="20" 
-                bind:value={answer} 
+                bind:value={answer2} 
                 style="color: white;"
             />
-        </FieldWrapper>
-        <button on:click|preventDefault={copyToClipboard} class="bg-secondary w-full p-4 rounded-md my-2" disabled={copyDisabled}>Copy</button>
-        <button on:click|preventDefault={handleSubmitArt} class="bg-secondary w-full p-4 rounded-md my-2" >Generate Article</button>
-        <FieldWrapper 
-        label="Generated Article"
-    >
-        <textarea 
-            id = "Custom Article"
-            class="form-field" 
-            rows="20" 
-            bind:value={answer2} 
-            style="color: white;"
-        />
-        </FieldWrapper>
-    {/if}
+            </FieldWrapper>
+        {/if}
     </form>
 
 
