@@ -266,6 +266,20 @@ onMount(async () => {
             <textarea class="form-field w-full h-10" name="keywords" bind:value={keywords} placeholder="Ex: Innovation, Subscription, Pre-order..."></textarea>
         </FieldWrapper>
 
+        <FieldWrapper 
+        label="Article Length"  >
+
+        <div class="relative">
+            <select placeholder="Long (3000-4000 words)" class="form-field w-full" bind:value={articleLength}>
+                <option value="">Select Length</option>
+                {#each lengthOptions as eachlength}
+                    <option value={eachlength}>{eachlength}</option>
+                {/each}
+            </select>
+            <span class="absolute right-4 top-5 arrow"/>
+        </div>
+    </FieldWrapper>
+
         <FieldWrapper label="What is the article about?">
             <textarea class="form-field w-full h-20" name="requirement" bind:value={requirement} placeholder="Describe the article topic here"></textarea>
         </FieldWrapper>
