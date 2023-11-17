@@ -48,7 +48,7 @@ let selectedEmailType = ''; // To store the selected tone
 	let yourName = ''
 	let emailContext = ''
 	let writingExample = ''
-	
+	let toneStyle = '';
 
 	let loading = false
 	let error = false
@@ -62,16 +62,15 @@ let selectedEmailType = ''; // To store the selected tone
 		error = false
 		answer = ''
 		context = ''
-		writingExample = writingStyles.find(style => style.personaName == yourName)?.writingExample; // assigns writing style of binded yourname value selected in drop down menu.
+		toneStyle = writingStyles.find(style => style.personaName == yourName)?.toneAnalysis; // assigns writing style of binded yourname value selected in drop down menu.
 		if(selectedEmailType == 'Email Drip Campaign'){
-			emailCampaignContext = "Create an email drip marketing campaign about" + emailContext;
-			context = emailCampaignContext + " With the recipient being " + recipientName + ", from " + yourName + ". Seperate it into 3 emails and write it in my tone and style and add emojis: " + writingExample;
+			emailCampaignContext = "Develop a comprehensive email drip marketing campaign centered around "  + emailContext;
+			context = emailCampaignContext + ". The campaign should be designed to resonate with the recipient, " + recipientName + ", and will be sent from, " + yourName + ". Divide the content into three separate emails. Label the first email as 'Email 1', the second as 'Email 2', and the third as 'Email 3'. Place these labels at the beginning of each respective email and add emojis. Also, write it the following tone and style: " + toneStyle;
 		}else if(selectedEmailType == 'Respond to Email'){ 
-		context = "Write an email response to " + recipientName + ", from " + yourName + " : " + emailContext;
+		context = "Write an email response to " + recipientName + ", from " + yourName + " centered around: " + emailContext + "Also be sure to write it the following tone and style: " + toneStyle;
 		}else { 
 		context = "Write an email to " + recipientName + ", from " + yourName + " and " + emailContext + 
-		"Write it in my writing style and tone but do not reiterate words from the text below because it is completely unrelated, only use it as a reference: "  
-		+ writingExample;
+		"Write it in the writing style and tone of the following:  "  + toneStyle;
 		}
 
 		const eventSource = new SSE('/api/explain', {
