@@ -49,13 +49,17 @@ onMount(async () => {
     let requirement = '';
     let writingExample = '';
 
+    let structure = '. Structure: - Organize with clear headings and subheadings. - Use bullet points and numbered lists for scannability. - Include an intro paragraph previewing the content. - Close with a summary paragraph recapping key takeaways. Content Development: - Provide history, context, and background information where needed. - Explain concepts clearly and thoroughly, anticipating questions. - Include relevant examples, anecdotes, quotes, statistics, and visual aids. When you do, cite the source URL. - Do not fabricate any statistics or information. Always base your content on existing information. - Offer practical tips, actionable advice, and specific recommendations. Provide examples. - Encourage reader interaction and engagement with questions. Formatting: - Check spelling, grammar, punctuation, capitalization, and syntax. - Break into readable paragraph lengths. - Use bolding, italics, and headlines to direct focus when appropriate.';
 
     //new code
     let targetAudience = '';
     let keywords = '';
-    let tone = '';
+    let toneStyle = '';
     let targetwordCount = '';
     let yourName = '';
+    let articleLength = '';
+    let lengthOptions = ['Short (1000-1500 words)', 'Medium (2000- 2500 words)', 'Long (3000-4000 words)']; // Add your tone options here
+
 
     let context2 = '';
     let loading2 = false;
@@ -78,7 +82,7 @@ onMount(async () => {
 		error = false
 		answer = ''
 		context = ''
-		context = "Create an outline for a comprehensive 3000-4000 word article about " + requirement + 
+		context = "Create an outline for a comprehensive" + articleLength + " article about " + requirement + 
 		", give speculated word counts for each section. Write it for the target audience being: " + targetAudience +
         ". also need to have word 'section' at begining of each suggested part in outline";
 
@@ -162,6 +166,9 @@ onMount(async () => {
         loading2 = true;
         error2 = false;
         answer2 = '';
+	if(yourName != 'Custom Tone'){
+            toneStyle = writingStyles.find(style => style.personaName == yourName)?.toneAnalysis; 
+        }
         //console.log("Full outline:", answer);
         const outlineSections = parseOutline(answer); // Parse the outline into sections
         //console.log("Divided Sections:", outlineSections);
@@ -171,7 +178,7 @@ onMount(async () => {
         for (let i = 0; i < outlineSections.length; i++) {
             const section = outlineSections[i];
             context = "Create one paragraph for this section: " + section.trim() +
-            ", Write it in this writing style and tone: " + tone + ", and include these keywords: " + keywords +
+            ", Write it in this writing style and tone: " + toneStyle + ", and include these keywords: " + keywords +
 	    ". Note: try not have duplicate contents in the previous conversation.";
 
             try {
