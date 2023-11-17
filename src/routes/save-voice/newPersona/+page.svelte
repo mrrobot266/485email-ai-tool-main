@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { CreateCompletionResponse } from 'openai';
+    import { SSE } from 'sse.js';
     import { initializeApp } from 'firebase/app';
     import { getFirestore, setDoc, addDoc, collection, getDoc } from 'firebase/firestore';
     import { docStore } from "sveltefire";
@@ -8,6 +10,7 @@
     import { getParam } from "../../../utils/url";
     import { onMount } from "svelte";
     import { goto } from '$app/navigation';
+	import { to_number } from 'svelte/internal'
 
     const firebaseConfig = {
         apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
@@ -27,9 +30,13 @@
 
     let message = '';
     let loading = false;
+    let error = false;
+    let context = '';
     let personaName = '';
     let writingExample = '';
-
+    let answer = '';
+    let toneAnalysis = '';
+    
    
     $: collectionRef = collection(db, "writingStyles")
     $: textDoc = docStore<any>(db, "writingStyles/"+id);
@@ -41,14 +48,16 @@
         const data = new FormData(event.target as HTMLFormElement);
 
         // Get the text from the textarea
-        const writingExample = data.get("writingExample") as string;
+        const writingExample = data.get("writingExample") as string; //make sure to change so it waits till answer is done generating.
         const personaName = data.get("personaName") as string;
+        const gettoneAnalysis = toneAnalysis;
 
         // Update the Firestore document
         if(id){
             await setDoc(textDoc.ref!, {
                 writingExample: writingExample,
                 personaName: personaName,
+                toneAnalysis: gettoneAnalysis,
             })
             
         }
@@ -56,6 +65,7 @@
             await addDoc(collectionRef, {
                 writingExample: writingExample,
                 personaName: personaName,
+                toneAnalysis: toneAnalysis,
             });
         }
         
@@ -65,6 +75,54 @@
         goto("/save-voice")
         
     }
+
+    const handleSubmitAnalyze = async () => {
+		loading = true
+		error = false
+		answer = ''
+		context = ''
+		context = writingExample;
+        
+		const eventSource = new SSE('/api/explain3', {
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			payload: JSON.stringify({ context })
+		})
+
+		context = ''
+
+		eventSource.addEventListener('error', (e) => {
+			error = true
+			loading = false
+			alert('Something went wrong!')
+		})
+
+		eventSource.addEventListener('message', (e) => {
+			try {
+				loading = false
+
+				if (e.data === '[DONE]') {
+                    toneAnalysis = answer;
+					//copyDisabled = false;
+					return
+				}
+
+				const completionResponse: CreateCompletionResponse = JSON.parse(e.data)
+
+				const [{ text }] = completionResponse.choices
+
+				answer = (answer ?? '') + text
+			} catch (err) {
+				error = true
+				loading = false
+				console.error(err)
+				alert('Something went wrong!')
+			}
+		})
+
+		eventSource.stream()
+	}
 
     onMount(() => {
         const id = getParam('id')
@@ -78,6 +136,8 @@
                     const data = snapshot.data()
                     personaName = data.personaName
                     writingExample = data.writingExample
+                    toneAnalysis = data.toneAnalysis
+                    
                 }
             })
         }
@@ -110,21 +170,37 @@
                 />
             </FieldWrapper>
             <FieldWrapper 
-				label="Your Email Examples"
+				label="Generated Email"
                 id="writingExample"
 			>
 				<textarea 
 					class="form-field" 
 					rows="6" 
 					name="writingExample"
-                    placeholder="Enter Writting Example Here..."
+                    placeholder="Paste Your Email/Content Writting Examples Here..."
                     bind:value={writingExample}
 				/>
 			</FieldWrapper>
+
+            <button on:click|preventDefault={handleSubmitAnalyze} class="bg-secondary w-full p-4 rounded-md my-2" >Analyze</button>
+            <a href="/save-voice">
+                <button type="button" class="bg-dull w-44 p-4 rounded-md my-2">Cancel</button>
+            </a>
+            {#if toneAnalysis}
+            <FieldWrapper 
+            label="This represents the brand tone that Touchpoint AI has crafted based on the provided text example."
+        >
+            <textarea 
+                id = "Writng Style Summary"
+                class="form-field" 
+                rows="10" 
+                bind:value={toneAnalysis} 
+                style="color: white;"
+            />
+            </FieldWrapper>
+            
+
             <div class="flex justify-between">
-                <a href="/save-voice">
-                    <button type="button" class="bg-dull w-44 p-4 rounded-md my-2">Cancel</button>
-                </a>
                 <button disabled={loading} class="bg-secondary w-44 p-4 rounded-md my-2 flex items-center justify-center">
                     {#if loading}
                         Saving...
@@ -134,6 +210,7 @@
                     {/if}
                 </button>
             </div>
+            {/if}
         </div>
     </form>
 </div>
