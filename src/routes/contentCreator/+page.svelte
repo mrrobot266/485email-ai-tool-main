@@ -255,7 +255,7 @@ onMount(async () => {
             <span class="absolute right-4 top-5 arrow"/>
         </div>
 
-        <input type="text" class="form-field w-full" placeholder="Ex: conversational, informative, energetic..." bind:value={tone}>
+        <input type="text" class="form-field w-full" placeholder="Ex: conversational, informative, energetic..." bind:value={toneStyle}>
         </FieldWrapper>
 
         <FieldWrapper label="Target Audience">
