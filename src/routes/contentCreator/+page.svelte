@@ -10,7 +10,10 @@
     import { getAnalytics } from "firebase/analytics";
     import { onMount } from 'svelte';
     import ContentView from './contentView.svelte';
+    import { marked } from 'marked';
 
+
+  
     const firebaseConfig = {
   apiKey: "AIzaSyAFxmdgTabKYliNNrZVj0s2XCFZPfwTyps",
   authDomain: "touchpoint-capstone-database.firebaseapp.com",
@@ -40,10 +43,20 @@ function parseOutline(outline: string): string[] {
 }
 
 let writingStyles: any[] = [];
+let markdownContent = '';
+        /**
+	 * @type {any}
+	 */
+let htmlContent;
 
 onMount(async () => {
         writingStyles = await getPersonas(db);
+        htmlContent = marked(markdownContent);
     });
+
+    $: if (answer2) {// if answer2 is edited or is still generating, html content will update. 
+        htmlContent = marked(answer2);
+    }
 
     let context = '';
     let requirement = '';
@@ -84,9 +97,9 @@ onMount(async () => {
 		context = ''
 		context = "Create an outline for a comprehensive" + articleLength + " article about " + requirement + 
 		", give speculated word counts for each section. Write it for the target audience being: " + targetAudience +
-        ". also need to have word 'section' at begining of each suggested part in outline";
+        ". Also, remember that it needs to have the word 'section' at begining of each suggested part in outline and a title at the top of the outline";
 
-		const eventSource = new SSE('/api/explain2', { // create eventsource which opens Server sent events connection to endpoint
+		const eventSource = new SSE('/api/explainOutline', { // create eventsource which opens Server sent events connection to endpoint
 			headers: {
 				'Content-Type': 'application/json' //indicates json data 
 			},
@@ -100,7 +113,7 @@ onMount(async () => {
 			loading = false
 			alert('Something went wrong!')
 		})
-
+        
 		eventSource.addEventListener('message', (e) => { //listens for new messages/tokens coming in, thats why new text continually shows up on screen
 			try {
 				loading = false             //no longer loading
@@ -125,8 +138,7 @@ onMount(async () => {
 
 		eventSource.stream()
 	}
-
-
+  
     const generateSectionContent = async (context, sectionIndex, totalSections) => {
         const eventSource = new SSE('/api/explain2', {
             headers: { 'Content-Type': 'application/json' },
@@ -177,9 +189,10 @@ onMount(async () => {
         //console.log("Outline Sections:", outlineSections);
         for (let i = 0; i < outlineSections.length; i++) {
             const section = outlineSections[i];
-            context = "Create one paragraph for this section: " + section.trim() +
-            ", Write it in this writing style and tone: " + toneStyle + ", and include these keywords: " + keywords +
-	    ". Note: try not have duplicate contents in the previous conversation.";
+            context = "### " + section.trim() +" ###" +
+            ". Generate the article in markdown syntax. Your task is to write this section of the article by adhering to the provided outline instructions. Write it in this writing style and tone: " 
+            + toneStyle + ", and include these keywords if relevant: " + keywords 
+            + ". Generate the article in markdown syntax.";
 
             try {
                 const sectionContent = await generateSectionContent(context, i, outlineSections.length);
@@ -197,7 +210,7 @@ onMount(async () => {
 
 	const copyToClipboard = () => {
 		const elem = document.createElement('textarea')
-		elem.value = answer
+		elem.value = answer2
 		document.body.appendChild(elem)
 		elem.select()
 		document.execCommand('copy')
@@ -283,7 +296,7 @@ onMount(async () => {
         <FieldWrapper label="What is the article about?">
             <textarea class="form-field w-full h-20" name="requirement" bind:value={requirement} placeholder="Describe the article topic here"></textarea>
         </FieldWrapper>
-        
+
         <button class="bg-secondary w-full p-4 rounded-md my-2">Write Outline for Article</button>
         {#if answer}
             <FieldWrapper label="Generated Outline">
@@ -297,9 +310,8 @@ onMount(async () => {
             {#if dividedSections.length > 0}
                 <h2>Number of Divided Sections: {dividedSections.length}</h2>
             {/if}
-        
-            <button on:click|preventDefault={copyToClipboard} class="bg-secondary w-full p-4 rounded-md my-2" disabled={copyDisabled}>Copy</button>
             <button on:click|preventDefault={handleSubmitArt} class="bg-secondary w-full p-4 rounded-md my-2" >Generate Article</button>
+        
             <FieldWrapper 
             label="Generated Article"
         >
@@ -311,12 +323,12 @@ onMount(async () => {
                 style="color: white;"
             />
             </FieldWrapper>
+            <button on:click|preventDefault={copyToClipboard} class="bg-secondary w-full p-4 rounded-md my-2" disabled={copyDisabled}>Copy</button>
         {/if}
     </form>
-
-
-        
-   
+</div>
+<div class="article-container">
+    {@html htmlContent}
 </div>
 
 <footer>
