@@ -99,7 +99,7 @@
       
       <div class="mb-8">
           <h2 class="text-2xl font-semibold ombre-h2">Enhancing Customer Engagement</h2>
-          <p class="mt-4 text-gray-700">We recognize that effective marketing hinges on customer engagement. Our AI-driven tools, featuring ChatGPT chatbots and personalized automated conversations, ensure that every customer receives the attention they deserve. This personalized approach not only re-engages potentially disheartened customers but also fosters meaningful, long-lasting relationships.</p>
+          <p class="mt-4 text-gray-700">We recognize that effective marketing hinges on customer engagement. Our AI-driven tools, featuring customized articles and personalized automated conversations, ensure that every customer receives the attention they deserve. This personalized approach not only re-engages potentially disheartened customers but also fosters meaningful, long-lasting relationships.</p>
       </div>
       
       <div>
