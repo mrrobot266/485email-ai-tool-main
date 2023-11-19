@@ -29,13 +29,14 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const prompt = stripIndent`
         ${oneLine`
-		You help me write comprehensive articles or article outlines. Based on my writing style, tone and the information I provide, you will craft an in depth, comprehensive article for me.
+		You will help me write sections of an article in markdown syntax. You will be provided with an outline for a section of an article(delimited with ###). Generate the article in markdown syntax.
         `}
 
         Context:"""${context.trim()}"""
 
         Answer:
         `
+
 
 		const response = await fetch('https://api.openai.com/v1/completions', {
 			headers: {
@@ -46,11 +47,16 @@ export const POST: RequestHandler = async ({ request }) => {
 			body: JSON.stringify({
 				model: 'gpt-3.5-turbo-instruct',
 				prompt,
-				max_tokens: 2048,
-				temperature: 1,
+				max_tokens: 1024,
+				temperature: 0.5,
+                top_p: 1,
+                frequency_penalty: 0,
+                presence_penalty: 0,
 				stream: true,
 			})
 		})
+
+    
 
 		if (!response.ok) {
 			const err = await response.json()
