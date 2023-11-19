@@ -6,6 +6,100 @@
 @tailwind utilities;
 
 
+/* Base font styles */
+.article-container {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    margin: auto;
+    max-width: 1000px; /* Adjust the width as needed */
+    height: 1000px; /* Set a fixed height */
+    overflow-y: scroll; /* Add vertical scrolling */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+   
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+
+h1 {
+    font-size: 2em; /* 32px */
+}
+
+h2 {
+    font-size: 1.75em; /* 28px */
+}
+
+h3 {
+    font-size: 1.5em; /* 24px */
+}
+
+h4 {
+    font-size: 1.25em; /* 20px */
+}
+
+h5 {
+    font-size: 1.125em; /* 18px */
+}
+
+h6 {
+    font-size: 1em; /* 16px */
+}
+
+/* Paragraphs */
+p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+/* Links */
+/* a {
+    color: #0077cc;
+    text-decoration: none;
+} */
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Lists */
+ul, ol {
+    margin-top: 0;
+    margin-bottom: 1em;
+    padding-left: 20px;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 3px solid #ccc;
+    margin: 0;
+    padding-left: 20px;
+    font-style: italic;
+}
+
+/* Code */
+code {
+    font-family: 'Courier New', monospace;
+    background-color: #eee;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+/* Additional styling can be added as needed */
+
+
+
 .section {
 	@apply h-[calc(100vh)];
 }
