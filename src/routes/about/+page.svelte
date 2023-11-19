@@ -85,7 +85,6 @@
         <h2 class="text-xl font-semibold mt-4 solutions-heading ombre-h3">Our Solutions</h2>
         <p class="mt-4">At Touch Point Digital Marketing Agency, we're committed to providing tailored solutions for businesses seeking to elevate their marketing efforts. Our offerings include:</p>
         <ul class="list-disc pl-8 mt-2">
-            <li><span class="highlight">Chatbot Development:</span> Crafting intelligent chatbots to streamline customer interactions and enhance user experience.</li>
             <li><span class="highlight">ChatGPT Training:</span> Empowering ChatGPT to address specific business inquiries, ensuring accurate and insightful responses.</li>
             <li><span class="highlight">Web Application and API Integration:</span> Creating user-friendly interfaces and seamless API connections for an intuitive experience.</li>
             <li><span class="highlight">Email Writing Tool:</span> Seamlessly integrated with our content creation tool, it empowers users to write personalized emails, with options for voice style and type selection.</li>
