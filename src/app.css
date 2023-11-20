@@ -13,7 +13,7 @@
     padding: 20px;
     margin: auto;
     max-width: 1000px; /* Adjust the width as needed */
-    height: 1000px; /* Set a fixed height */
+    height: 1200px; /* Set a fixed height */
     overflow-y: scroll; /* Add vertical scrolling */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
