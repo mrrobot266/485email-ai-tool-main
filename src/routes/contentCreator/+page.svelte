@@ -41,7 +41,7 @@ function parseOutline(outline: string): string[] {
 
     return outline.split(sectionRegex).filter(section => section.trim() !== '');
 }
-
+let showHistory = false;
 let writingStyles: any[] = [];
 let markdownContent = '';
         /**
@@ -88,7 +88,6 @@ onMount(async () => {
     let dividedSections = [];
     // let selectedContent = null;
     let showLogin = false; // Add this to track if the login modal should be shown
-    let showHistory = false;
 
     const handleSubmit = async () => {
 		loading = true
@@ -217,35 +216,65 @@ onMount(async () => {
 		document.body.removeChild(elem)
 		alert('Copied to clipboard!')
  	}
+	function toggleHistory() {
+	    showHistory = !showHistory;
+	}
+	function closeHistory() {
+		showHistory = false;
+	}
 
 </script>
 
 <style>
-    .section-content {
+    	.section-content {
         /* Add any styles you want for the section content here */
-        padding-bottom: 10px; /* Space at the bottom of each section */
-    }
-    .section-separator {
-        height: 2px; /* The thickness of the separator line */
-        background-color: black; /* Color of the separator line */
-        margin: 10px 0; /* Space above and below the line */
-    }
+        	padding-bottom: 10px; /* Space at the bottom of each section */
+    	}
+    	.section-separator {
+        	height: 2px; /* The thickness of the separator line */
+        	background-color: black; /* Color of the separator line */
+       		margin: 10px 0; /* Space above and below the line */
+    	}
+	nav {
+	        display: flex;
+	        justify-content: center; /* Center the button horizontally */
+    	}
+	button.history-button {
+	        background-color: #343a40; /* Bootstrap primary color */
+	        color: white;
+	        padding: 0.5rem 1rem;
+	        margin: 0.5rem;
+	        border: none;
+	        border-radius: 0.25rem;
+	        cursor: pointer;
+	        font-size: 1rem;
+	        transition: background-color 0.15s ease-in-out;
+	}
+	.fixed-top-left {
+	        position: fixed;
+	        top: 200;
+	        left: 0;
+	        margin: 1rem;
+	        z-index: 1050; /* Ensure it's above the modal */
+	}
+	
+	.history-button {
+	    /* ... */
+	}
+	button.history-button:hover {
+	        background-color: #23272b; /* Darken color on hover */
+	}
 </style>
+
 
 <header>
     <nav>
-        <button on:click={() => showLogin = !showLogin}>Login</button>
-        {#if showLogin}
-            <Login />
-        {/if}
-
-        <button on:click={() => showHistory = true}>History</button>
-        {#if showHistory}
-            <History visible={showHistory} onClose={() => showHistory = false} />
-        {/if}
+        <button class="history-button fixed-top-left" on:click={toggleHistory}>History</button>
     </nav>
 </header>
-
+{#if showHistory}
+    <History bind:visible={showHistory} onClose={closeHistory} />
+{/if}
 <div class="max-w-md w-full m-auto flex flex-col items-center p-12">
     <h1 class="text-3xl font-semibold">Write Me an Article</h1>
     <h2 class="text-sm text-dull my-6">Please fill out the details</h2>
@@ -330,6 +359,10 @@ onMount(async () => {
 <div class="article-container">
     {@html htmlContent}
 </div>
+
+<footer>
+    <!-- Footer content remains unchanged -->
+</footer>
 
 <footer>
     <!-- Footer content remains unchanged -->

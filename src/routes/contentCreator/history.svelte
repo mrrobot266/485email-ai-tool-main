@@ -2,8 +2,8 @@
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
 
-    export let visible = false;  // accept the prop from parent
-    export let onClose = () => {};  // accept the close function from parent
+    export let visible;  // accept the prop from parent
+    export let onClose;  // accept the close function from parent
 
     let selectedContent = ' ';
     let isViewingHistory = true;
@@ -22,9 +22,17 @@
     const returnToHistory = () => {
         isViewingHistory = true;
     }
-    const closeHistoryPopup = () => {
-        onClose();  // use the function passed from the parent to close the popup
-        dispatch('close');  // this will notify any parent component if needed
+    $: if (!visible) {
+        // If the `visible` prop is changed externally, reset local state
+        isViewingHistory = true;
+        selectedContent = '';
+    }
+    function closeHistoryPopup() {
+        visible = false;
+        if (onClose) {
+            onClose();
+        }
+        dispatch('close');
     };
 </script>
 
@@ -33,8 +41,8 @@
 
 
 {#if visible}
-<div class="overlay fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-10"></div>
-<div class="modal" style="--popupHeight: {popupHeight}">
+<div class="overlay" on:click={closeHistoryPopup}></div>
+<div class="modal" style="--popupHeight: {popupHeight};">
     <button on:click={closeHistoryPopup} class="close-btn">x</button>
     {#if isViewingHistory}
         <h2 class="text-3xl font-medium pb-1">History</h2>
@@ -52,15 +60,25 @@
 
 <style>
     /* Add the same styles for overlay, modal, and close-btn from your login.svelte */
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000; /* Ensure this is high enough to cover the page content */
+    }
+
     .modal {
-        display: flex;
-        flex-direction: column;
-        min-height: 150px;  /* set a minimum height */
-        max-height: 80vh;   /* 80% of viewport height, adjust as needed */
-        overflow-y: auto;   /* will show scroll if content is longer than max-height */
-        align-items: center;
-        justify-content: center;
-        /* ... add other modal styles here ... */
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        z-index: 1001; /* Ensure this is higher than the overlay */
+        /* Rest of your modal styles */
     }
     .history-list {
         list-style: none;
@@ -94,4 +112,5 @@
         top: 10px;
         right: 10px;
     }
+
 </style>
