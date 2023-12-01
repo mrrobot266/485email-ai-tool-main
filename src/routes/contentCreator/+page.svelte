@@ -11,7 +11,7 @@
     import { onMount } from 'svelte';
     import ContentView from './contentView.svelte';
     import { marked } from 'marked';
-
+    import { historyItems } from '../../historyStore';
 
   
     const firebaseConfig = {
@@ -196,7 +196,7 @@ onMount(async () => {
             try {
                 const sectionContent = await generateSectionContent(context, i, outlineSections.length);
                 answer2 += sectionContent; // Append the content of each section to answer2
-                requestCount++;
+                //requestCount++;
             } catch (err) {
                 console.error("Error generating content for section:", err);
                 break; // Stop further processing on error
@@ -205,6 +205,15 @@ onMount(async () => {
 
         loading2 = false;
         error2 = answer2 === ''; // If no content is generated, consider it an error
+	if (answer2) {
+	        const newItem = {
+	            keywords: keywords,
+	            content: answer2, // Assuming answer2 is the generated content
+	            timestamp: new Date().toLocaleString()
+	        };
+	
+	        historyItems.update(items => [...items, newItem]);
+	    }
     };
 
 	const copyToClipboard = () => {
