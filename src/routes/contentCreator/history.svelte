@@ -1,5 +1,6 @@
 <script>
     import { createEventDispatcher } from 'svelte';
+    import { historyItems } from '../../historyStore';
     const dispatch = createEventDispatcher();
 
     export let visible;  // accept the prop from parent
@@ -7,26 +8,28 @@
 
     let selectedContent = ' ';
     let isViewingHistory = true;
-    let historyItems = [
-        'Generated content example 1...',
-        'Generated content example 2...',
-        'Generated content example 3...',
-        // Add more history items as needed
-    ];
-
+    let isViewingContent = false;
     let popupHeight = `${historyItems.length * 50}px`; 
-    const viewContent = (/** @type {string} */ content) => {
-        selectedContent = content;
-        console.log(selectedContent);
+    $: items = $historyItems;
+
+    const viewContent = item => {
+        selectedContent = item.content;
+        isViewingHistory = false;
+        isViewingContent = true; // Set true when content is being viewed
     };
+
     const returnToHistory = () => {
         isViewingHistory = true;
-    }
+        isViewingContent = false; // Set false to go back to history
+    };
+
     $: if (!visible) {
         // If the `visible` prop is changed externally, reset local state
         isViewingHistory = true;
+        isViewingContent = false;
         selectedContent = '';
     }
+
     function closeHistoryPopup() {
         visible = false;
         if (onClose) {
@@ -34,6 +37,23 @@
         }
         dispatch('close');
     };
+    async function fetchHistory() {
+        try {
+            const querySnapshot = await getDocs(collection(db, "generatedArticles"));
+            const items = querySnapshot.docs.map(doc => {
+                let data = doc.data();
+                return {
+                    id: doc.id,
+                    keywords: data.keywords,
+                    content: data.sections.join(' '), // Join the sections into a single string
+                    timestamp: data.timestamp.toDate().toLocaleString() // Format timestamp
+                };
+            });
+            historyItems.set(items); // Correct way to set the store's value
+        } catch (error) {
+            console.error("Error fetching history: ", error);
+        }
+    }
 </script>
 
 <!-- Your content before the button -->
@@ -41,21 +61,26 @@
 
 
 {#if visible}
-<div class="overlay" on:click={closeHistoryPopup}></div>
-<div class="modal" style="--popupHeight: {popupHeight};">
-    <button on:click={closeHistoryPopup} class="close-btn">x</button>
-    {#if isViewingHistory}
-        <h2 class="text-3xl font-medium pb-1">History</h2>
-        <div class="history-list">
-            {#each historyItems as item}
-                <button on:click={() => viewContent(item)} class="history-item">{item}</button>
-            {/each}
-        </div>
-    {:else}
-        <button on:click={returnToHistory} class="history-item">Back</button>
-        <div class="content">{selectedContent}</div>
-    {/if}
-</div>
+    <div class="overlay" on:click={closeHistoryPopup}></div>
+    <div class="modal">
+        <button on:click={closeHistoryPopup} class="close-btn">x</button>
+        {#if isViewingHistory}
+            <h2>History</h2>
+            <div class="history-list">
+                {#each $historyItems as item}
+                    <button on:click={() => viewContent(item)} class="history-item">
+                        {item.keywords} - {item.timestamp}
+                    </button>
+                {/each}
+            </div>
+        {:else if isViewingContent}
+            <!-- Content view with a back button -->
+            <button on:click={returnToHistory} class="back-button">Back</button>
+            <div class="content-view">
+                {@html selectedContent}
+            </div>
+        {/if}
+    </div>
 {/if}
 
 <style>
@@ -75,9 +100,11 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: white;
+        background: black;
         padding: 20px;
         z-index: 1001; /* Ensure this is higher than the overlay */
+        max-height: 80vh; /* or any other value that suits your design */
+        overflow-y: auto; /* Enable vertical scrolling */
         /* Rest of your modal styles */
     }
     .history-list {
@@ -96,9 +123,12 @@
     .content {
         font-size: 1rem;
     }
+    .content-view {
+    padding: 1rem; /* Add padding for content readability */
+    }
 
     .close-btn {
-        background-color: #f0f0f0;
+        background-color: #3b3939;
         border: none;
         border-radius: 50%;
         cursor: pointer;
