@@ -31,14 +31,8 @@
   <p align="center">
     A tool for generating personalized emails and articles in your Brand's style!
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://485-email-contentcreator-main.vercel.app/">View Demo</a>
+    
   </p>
 </div>
 
@@ -95,6 +89,10 @@ TouchPoint AI Marketing Tool is an application built in partnership with TouchPo
 * [![Svelte][Svelte.dev]][Svelte-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+
+## Demos/Examples
 
 
 <!-- CONTACT -->
