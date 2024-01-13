@@ -30,14 +30,14 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="[https://github.com/mrrobot266/485email-ai-tool-main/blob/main/static/automation.png">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/mrrobot266/485email-ai-tool-main">
+    <img src="static/automation.png" alt="Logo" width="400" height="400">
   </a>
 
-<h3 align="center">project_title</h3>
+<h3 align="center">TouchPoint AI Marketing Tool</h3>
 
   <p align="center">
-    project_description
+    A tool for generating personalized emails and articles in your Brand's style!
     <br />
     <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
     <br />
@@ -83,9 +83,16 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<img src="Demos/TPMarketingToolDemoScreenshot.PNG" alt="Logo" width="700" height="420">
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+TouchPoint AI Marketing Tool is an application built in partnership with TouchPoint Digital Marketing Agency. It is a tool for generating personalized emails and long articles in your brand's personal style. Our primary mission is to bridge the gap between marketing and artificial intelligence, offering businesses a transformative tool to enhance their outreach strategies. Our project leverages cutting-edge technology, including the renowned ChatGPT, alongside integration with various other tools via APIs. 
+
+## Tools and Features
+
+* Generate content at the click of a button. 🖱️
+* Create personalized General Emails or Marketing Drip Campaign Emails. 
+* Create personalized long (4000+ words) articles with specific keywords, tone, target audience, and context. 
+* Save your personal Brand voice and writing style. 🧔
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -93,14 +100,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
 * [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -108,29 +108,16 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
+Email: ericksoto266@gmail.com
+Project Link: [https://github.com/mrrobot266/485email-ai-tool-main](https://github.com/mrrobot266/485email-ai-tool-main)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
+[contributors-url]: https://github.com/mrrobot266/485email-ai-tool-main/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
 [forks-url]: https://github.com/github_username/repo_name/network/members
 [stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
