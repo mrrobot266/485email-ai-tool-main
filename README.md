@@ -23,7 +23,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/mrrobot266/485email-ai-tool-main">
-    <img src="static/automation.png" alt="Logo" width="250" height="250">
+    <img src="static/automation.png" alt="Logo" width="200" height="200">
   </a>
 
 <h3 align="center">TouchPoint AI Marketing Tool</h3>
