@@ -79,7 +79,7 @@ Our primary mission is to bridge the gap between marketing and artificial intell
 
 ## Tools and Features
 
-* Generate content at the click of a button. 🖱️
+* Utilizes ChatGPT to generate content at the click of a button. [![chatgpt][chatgpt.com]][chatgpt-url]
 * Create personalized General Emails or Marketing Drip Campaign Emails. 
 * Create personalized long (4000+ words) articles with specific keywords, tone, target audience, and context. 
 * Save your personal Brand voice and writing style. 🧔
@@ -126,7 +126,8 @@ Our primary mission is to bridge the gap between marketing and artificial intell
 [Firebase-url]: https://firebase.google.com/
 [TypeScript.org]: https://img.shields.io/badge/TypeScript-%233178C6?style=for-the-badge&logo=TypeScript&labelColor=black
 [TypeScript-url]: https://www.typescriptlang.org/
-
+[chatgpt.com]: https://img.shields.io/badge/ChatGPT-%23412991?style=for-the-badge&logo=openai&labelColor=black
+[chatgpt-url]: https://chat.openai.com/
 
 
 
