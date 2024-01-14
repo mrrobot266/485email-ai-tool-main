@@ -46,6 +46,8 @@
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
+        <li><a href="#the-value">The Value</a></li>
+        <li><a href="#tools-and-features">Tools and Features</a></li>
       </ul>
     </li>
     <li>
