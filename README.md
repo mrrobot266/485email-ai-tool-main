@@ -36,8 +36,6 @@
   </p>
 </div>
 
-
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -45,26 +43,26 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
         <li><a href="#the-value">The Value</a></li>
         <li><a href="#tools-and-features">Tools and Features</a></li>
+        <li><a href="#built-with">Built With</a></li>
       </ul>
+    </li>
+    <li>
+      <a href="#demos/examples">Demos/Examples</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#creating-a-project">Creating a Project</a></li>
+        <li><a href="#developing">Developing</a></li>
+        <li><a href="#building">Building</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
+
 
 
 
@@ -102,14 +100,8 @@ Our primary mission is to bridge the gap between marketing and artificial intell
 
 ## Demos/Examples
 
+<a href="https://github.com/mrrobot266/485email-ai-tool-main/Demos/The Ultimate Guide to Raising a Happy and Healthy Baby.pdf"><strong>Generated Article Example</strong></a>
 
-<!-- CONTACT -->
-## Contact
-
-Email: ericksoto266@gmail.com
-Project Link: [https://github.com/mrrobot266/485email-ai-tool-main](https://github.com/mrrobot266/485email-ai-tool-main)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -192,3 +184,11 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+<!-- CONTACT -->
+## Contact
+
+Email: ericksoto266@gmail.com
+Project Link: [https://github.com/mrrobot266/485email-ai-tool-main](https://github.com/mrrobot266/485email-ai-tool-main)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
