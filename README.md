@@ -100,7 +100,7 @@ Our primary mission is to bridge the gap between marketing and artificial intell
 
 ## Demos/Examples
 
-<a href="https://github.com/mrrobot266/485email-ai-tool-main/Demos/The Ultimate Guide to Raising a Happy and Healthy Baby.pdf"><strong>Generated Article Example</strong></a>
+<a href="https://github.com/mrrobot266/485email-ai-tool-main/blob/main/Demos/The%20Ultimate%20Guide%20to%20Raising%20a%20Happy%20and%20Healthy%20Baby.pdf"><strong>Generated Article Example</strong></a>
 
 
 
